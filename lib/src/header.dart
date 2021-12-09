@@ -13,14 +13,16 @@ class Header extends StatelessWidget {
     this.onPressed,
     this.dateStyle,
     this.todayStyle,
+    this.todayText = 'Today',
   }) : super(key: key);
 
-  static final _dateFormatter = DateFormat().add_yMMMM();
+  static final _dateFormatter = DateFormat('yyyy-M');
   final DateTime monthDate;
   final EdgeInsetsGeometry margin;
   final VoidCallback? onPressed;
   final TextStyle? dateStyle;
   final TextStyle? todayStyle;
+  final String todayText;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +48,7 @@ class Header extends StatelessWidget {
                 vertical: 4.0,
               ),
               child: Text(
-                'Today',
+                todayText,
                 style: todayStyle ?? theme.textTheme.subtitle1!,
               ),
             ),
