@@ -18,7 +18,8 @@ class MonthView extends StatelessWidget {
   final double weekLineHeight;
   final int weeksAmount;
   final ValueChanged<DateTime>? onChanged;
-  final List<DateTime>? events;
+  //final List<DateTime>? events;
+  final Map<int, int>? events;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,8 @@ class MonthView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: List<Widget>.generate(
-          6,
+          //6,
+          weeksAmount,
           (weekIndex) {
             final weekStart = weekIndex * 7;
 

@@ -14,10 +14,13 @@ class _MyAppState extends State<MyApp> {
   final _calendarControllerToday = AdvancedCalendarController.today();
   final _calendarControllerCustom =
       AdvancedCalendarController.custom(DateTime(2021, 2, 16));
-  final List<DateTime> events = [
+
+  /*final List<DateTime> events = [
     DateTime.utc(2021, 08, 10, 12),
     DateTime.utc(2021, 08, 11, 12)
-  ];
+  ];*/
+  final Map<int, int> events = {};
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

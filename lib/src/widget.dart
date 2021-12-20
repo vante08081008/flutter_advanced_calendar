@@ -31,9 +31,11 @@ class AdvancedCalendar extends StatefulWidget {
     this.disableExpand,
     this.barIndicator = false,
     this.indicatorColor = Colors.black,
+    this.eventColor = Colors.black,
     this.height,
     this.expanded = false,
     this.todayText = "Today",
+    this.showWeekNameOnWeek = false,
   }) : super(key: key);
 
   /// Calendar selection date controller.
@@ -52,7 +54,8 @@ class AdvancedCalendar extends StatefulWidget {
   final int weeksInMonthViewAmount;
 
   /// List of points for the week and mounth
-  final List<DateTime>? events;
+  //final List<DateTime>? events;
+  final Map<int, int>? events;
 
   /// The first day of the week starts[0-6]
   final int? startWeekDay;
@@ -74,9 +77,11 @@ class AdvancedCalendar extends StatefulWidget {
 
   final bool barIndicator;
   final Color indicatorColor;
+  final Color eventColor;
   final double? height;
   final bool? expanded;
   final String todayText;
+  final bool showWeekNameOnWeek;
 
   @override
   _AdvancedCalendarState createState() => _AdvancedCalendarState();
@@ -142,7 +147,11 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
       _weekRangeList = _controller.value.generateWeeks(
         widget.preloadWeekViewAmount,
       );
-      _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+      try {
+        _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+      } catch (e) {
+        print(e);
+      }
     });
     if (widget.startWeekDay != null && widget.startWeekDay! < 7) {
       final time = _controller.value.subtract(
@@ -210,15 +219,16 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                       );
                     },
                   ),
-                WeekDays(
-                  style: theme.textTheme.bodyText1!.copyWith(
-                    color: theme.hintColor,
-                    fontSize: 12,
+                if (widget.showWeekNameOnWeek == false)
+                  WeekDays(
+                    style: theme.textTheme.bodyText1!.copyWith(
+                      color: theme.hintColor,
+                      fontSize: 12,
+                    ),
+                    weekNames: _weekNames != null
+                        ? _weekNames!
+                        : const <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'],
                   ),
-                  weekNames: _weekNames != null
-                      ? _weekNames!
-                      : const <String>['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-                ),
                 AnimatedBuilder(
                   animation: _animationController,
                   builder: (_, __) {
@@ -322,6 +332,10 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
                                                       widget.barIndicator,
                                                   indicatorColor:
                                                       widget.indicatorColor,
+                                                  eventColor: widget.eventColor,
+                                                  weekNames: widget.weekNames,
+                                                  showWeekNameOnWeek:
+                                                      widget.showWeekNameOnWeek,
                                                 );
                                               },
                                             ),
@@ -381,8 +395,16 @@ class _AdvancedCalendarState extends State<AdvancedCalendar>
   void _handleTodayPressed() {
     _controller.value = DateTime.now().toZeroTime();
 
-    _monthPageController!.jumpToPage(widget.preloadMonthViewAmount ~/ 2);
-    _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+    try {
+      _monthPageController!.jumpToPage(widget.preloadMonthViewAmount ~/ 2);
+    } catch (e) {
+      print(e);
+    }
+    try {
+      _weekPageController!.jumpToPage(widget.preloadWeekViewAmount ~/ 2);
+    } catch (e) {
+      print(e);
+    }
   }
 
   ScrollPhysics closeMonthScroll() {

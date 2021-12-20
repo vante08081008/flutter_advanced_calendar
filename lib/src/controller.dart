@@ -16,5 +16,6 @@ class AdvancedCalendarController extends ValueNotifier<DateTime> {
   @override
   set value(DateTime newValue) {
     super.value = newValue.toZeroTime();
+    notifyListeners();
   }
 }

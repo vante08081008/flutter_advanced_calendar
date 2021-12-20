@@ -11,6 +11,9 @@ class WeekView extends StatelessWidget {
     this.events,
     this.barIndicator = false,
     this.indicatorColor = Colors.black,
+    this.eventColor = Colors.black,
+    this.weekNames,
+    this.showWeekNameOnWeek = false,
   }) : super(key: key);
 
   final DateTime todayDate = DateTime.now().toZeroTime();
@@ -19,9 +22,21 @@ class WeekView extends StatelessWidget {
   final int? highlightMonth;
   final DateTime selectedDate;
   final ValueChanged<DateTime>? onChanged;
-  final List<DateTime>? events;
+  //final List<DateTime>? events;
+  final Map<int, int>? events;
   final bool barIndicator;
   final Color indicatorColor;
+  final Color eventColor;
+  List<String>? weekNames;
+  final bool showWeekNameOnWeek;
+
+  int _getEventCount(DateTime date) {
+    if (events != null) {
+      return events![date.millisecondsSinceEpoch] ?? 0;
+    } else {
+      return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +59,49 @@ class WeekView extends StatelessWidget {
                 final isHighlight = highlightMonth == null
                     ? true
                     : date.month == highlightMonth;
+                int eventCount = _getEventCount(date);
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
+                    Container(
+                      height: 10,
+                      width: 10,
+                      alignment: Alignment.center,
+                      decoration: (eventCount > 0)
+                          ? (BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: eventColor))
+                          : null,
+                      child: (eventCount > 0)
+                          ? Text(
+                              eventCount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 3),
+                    ),
+                    if (showWeekNameOnWeek &&
+                        (weekNames != null) &&
+                        (weekNames!.length == 7))
+                      Text(
+                        weekNames![dayIndex],
+                        style: theme.textTheme.bodyText1!.copyWith(
+                          color: theme.hintColor,
+                          fontSize: 12,
+                        ),
+                      ),
                     DateBox(
-                      onPressed:
-                          onChanged != null ? () => onChanged!(date) : null,
+                      onPressed: () {
+                        if (onChanged != null) {
+                          onChanged!(date);
+                        }
+                      },
                       borderRadius: BorderRadius.circular(100),
                       color: barIndicator
                           ? Colors.transparent
@@ -68,19 +120,6 @@ class WeekView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    /*
-                Column(
-                  children: List<Widget>.generate(
-                      events != null ? events!.length : 0,
-                      (index) => events![index].isSameDate(date)
-                          ? Container(
-                              height: 6,
-                              width: 6,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                  color: Theme.of(context).primaryColor))
-                          : const SizedBox()),
-                )*/
                   ],
                 );
               },
