@@ -21,7 +21,7 @@ class AdvancedCalendar extends StatefulWidget {
     this.startWeekDay,
     this.events,
     this.weekLineHeight = 32.0,
-    this.preloadMonthViewAmount = 13,
+    this.preloadMonthViewAmount = 240,
     this.preloadWeekViewAmount = 21,
     this.weeksInMonthViewAmount = 6,
     this.todayStyle,
